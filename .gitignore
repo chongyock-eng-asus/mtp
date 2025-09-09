@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+
+# Virtual environments
+env/
+venv/
+.venv/
+ENV/
+
+# OS files
+.DS_Store
+Thumbs.db
