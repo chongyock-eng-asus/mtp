@@ -1,3 +1,6 @@
+import torch 
+import torch.nn as nn
+
 class SamplerHead(nn.Module):
     """
     Lightweight sampler head for coherent sequence generation

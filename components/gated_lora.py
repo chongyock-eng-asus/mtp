@@ -65,3 +65,26 @@ def replace_linear_layers(model, rank=128, alpha=256, dropout=0.1):
 
             setattr(parent, attr_name, replacement)
             print(f"Replaced {name}")
+
+def copy_weights_after_gated_lora(model):
+    """Copy weights after GatedLoRA replacement"""
+    for name, module in model.named_modules():
+        if hasattr(module, '_original_weights'):
+            # Copy weights to the base layers of GatedLoRA
+            if hasattr(module.q_proj, 'base_layer'):
+                module.q_proj.base_layer.weight.data.copy_(module._original_weights['q_proj'])
+                module.k_proj.base_layer.weight.data.copy_(module._original_weights['k_proj'])
+                module.v_proj.base_layer.weight.data.copy_(module._original_weights['v_proj'])
+                module.o_proj.base_layer.weight.data.copy_(module._original_weights['o_proj'])
+                
+                if hasattr(module, '_original_biases'):
+                    if module.q_proj.base_layer.bias is not None:
+                        module.q_proj.base_layer.bias.data.copy_(module._original_biases['q_proj'])
+                        module.k_proj.base_layer.bias.data.copy_(module._original_biases['k_proj'])
+                        module.v_proj.base_layer.bias.data.copy_(module._original_biases['v_proj'])
+                        module.o_proj.base_layer.bias.data.copy_(module._original_biases['o_proj'])
+            
+            # Clean up temporary storage
+            delattr(module, '_original_weights')
+            if hasattr(module, '_original_biases'):
+                delattr(module, '_original_biases')

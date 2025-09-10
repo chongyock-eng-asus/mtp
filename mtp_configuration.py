@@ -1,5 +1,9 @@
 from transformers import PreTrainedModel, PretrainedConfig
 import os
+from dotenv import load_dotenv 
+
+# Load environment variables from .env file
+load_dotenv()
 
 class MultiTokenPredictionConfig(PretrainedConfig):
     model_type = "multi_token_prediction"
@@ -14,7 +18,7 @@ class MultiTokenPredictionConfig(PretrainedConfig):
         API_KEY: str = None,
         WANDB_API_KEY: str = None,
         learning_rate: float = 2e-4,
-        max_length: int = 512,
+        max_length: int = 4096,
         num_epochs: int = 1,
         output_dir:str = "mtp_model_output",
         **kwargs
